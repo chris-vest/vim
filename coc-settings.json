@@ -11,6 +11,11 @@
       "filetypes": ["terraform"],
       "initializationOptions": {}
     },
+    "rust": {
+      "command": "rust-analyzer",
+      "filetypes": ["rust"],
+      "rootPatterns": ["Cargo.toml"]
+    },
    "python": {
      "command": "python3",
      "args": [

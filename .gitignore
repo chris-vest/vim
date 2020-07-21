@@ -1,4 +1,4 @@
 .git/
 .git
 bundle/*/doc/tags
-init.vim
+node_modules/

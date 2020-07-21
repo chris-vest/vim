@@ -100,6 +100,7 @@
 [submodule "bundle/coc.nvim"]
 	path = bundle/coc.nvim
 	url = git@github.com:neoclide/coc.nvim.git
+	branch = release
 [submodule "bundle/auto-pairs"]
 	path = bundle/auto-pairs
 	url = git@github.com:jiangmiao/auto-pairs.git

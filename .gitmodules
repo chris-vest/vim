@@ -19,9 +19,6 @@
 [submodule "bundle/vim-json"]
 	path = bundle/vim-json
 	url = git@github.com:elzr/vim-json.git
-[submodule "bundle/ctrlp.vim"]
-	path = bundle/ctrlp.vim
-	url = git@github.com:ctrlpvim/ctrlp.vim.git
 [submodule "bundle/delimitMate"]
 	path = bundle/delimitMate
 	url = git@github.com:Raimondi/delimitMate.git
@@ -101,12 +98,21 @@
 	path = bundle/coc.nvim
 	url = git@github.com:neoclide/coc.nvim.git
 	branch = release
-[submodule "bundle/auto-pairs"]
-	path = bundle/auto-pairs
-	url = git@github.com:jiangmiao/auto-pairs.git
 [submodule "bundle/vim-tmux-focus-events"]
 	path = bundle/vim-tmux-focus-events
 	url = git@github.com:tmux-plugins/vim-tmux-focus-events.git
 [submodule "bundle/vim-tmux-clipboard"]
 	path = bundle/vim-tmux-clipboard
 	url = git@github.com:roxma/vim-tmux-clipboard.git
+[submodule "bundle/open-browser-github.vim"]
+	path = bundle/open-browser-github.vim
+	url = git@github.com:tyru/open-browser-github.vim.git
+[submodule "bundle/open-browser.vim"]
+	path = bundle/open-browser.vim
+	url = git@github.com:tyru/open-browser.vim.git
+[submodule "bundle/ultisnips"]
+	path = bundle/ultisnips
+	url = git@github.com:SirVer/ultisnips.git
+[submodule "bundle/fzf.vim"]
+	path = bundle/fzf.vim
+	url = git@github.com:junegunn/fzf.vim.git

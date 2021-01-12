@@ -13,6 +13,13 @@ filetype plugin indent on     " required
 " set shell
 set shell=/bin/bash
 
+" save undo trees in files
+set undofile
+set undodir=~/.config/nvim/undo
+
+" number of undo saved
+set undolevels=10000
+
 "
 " Settings
 "
@@ -25,7 +32,7 @@ set showmode                    " Show current mode.
 
 set clipboard=unnamedplus       " Use system clipboard
 set noswapfile                  " Don't use swapfile
-set nobackup					          " Don't create annoying backup files
+set nobackup					" Don't create annoying backup files
 set nowritebackup
 set splitright                  " Split vertical windows right to the current windows
 set splitbelow                  " Split horizontal windows below to the current windows
@@ -496,14 +503,17 @@ let g:airline_theme='term'
 
 let g:airline#extensions#coc#enabled = 1
 
-let g:airline_extensions = ['coc']
-let g:airline#extensions#default#layout = [['a', 'b', 'c'], ['x', 'z', 'warning', 'error']]
-let g:airline_skip_empty_sections = 1
-let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
-let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
+" let g:airline_extensions = ['coc']
+" let g:airline#extensions#default#layout = [['a', 'b', 'c'], ['x', 'z', 'warning', 'error']]
+" let g:airline_skip_empty_sections = 0
+" let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
+" let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
 " Configure error/warning section to use coc.nvim
-let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
-let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
+" let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
+" let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
+
+let g:airline_extensions#tabline#show_buffers = 1
+
 
 " =================== vim-terraform ========================
 
@@ -591,6 +601,20 @@ let g:go_def_mapping_enabled = 0
 
 let g:go_gopls_enabled = 0
 let g:go_gopls_options=['-remote=auto']
+
+" -------------------------------------------------------------------------------------------------
+" utilsnips default settings
+" -------------------------------------------------------------------------------------------------
+
+" Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
+" - https://github.com/Valloric/YouCompleteMe
+" - https://github.com/nvim-lua/completion-nvim
+let g:UltiSnipsExpandTrigger="<S-Tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
 
 " -------------------------------------------------------------------------------------------------
 " coc.nvim default settings

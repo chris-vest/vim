@@ -4,7 +4,10 @@
       "command": "gopls",
       "args": ["-remote=auto"],
       "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
-      "filetypes": ["go"]
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "usePlaceholders": true
+      }
     },
     "terraform": {
       "command": "terraform-lsp",

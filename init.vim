@@ -638,7 +638,7 @@ let $FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --layout reverse --ma
 " NVIM-LSP
 lua << EOF
 	require'lspconfig'.gopls.setup{}
-	require'lspconfig'.tflint.setup{ filetypes = { "terraform", "tf" } }
+	require'lspconfig'.tflint.setup{}
 
 	local nvim_lsp = require('lspconfig')
 	local on_attach = function(client, bufnr)
@@ -697,7 +697,7 @@ lua << EOF
 	end
 EOF
 
-" COMPE
+" COMPE autocomplete
 
 inoremap <silent><expr> <C-Space> compe#complete()
 inoremap <silent><expr> <CR>      compe#confirm('<CR>')

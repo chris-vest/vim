@@ -553,11 +553,13 @@ let g:go_highlight_trailing_whitespace_error = 1
 let g:go_highlight_extra_types = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_interfaces = 1
+let g:go_highlight_operators = 1
 let g:go_fmt_autosave = 1
 let g:go_gopls_use_placeholders = 1
 let g:go_auto_type_info = 1
 let g:go_gopls_matcher = "fuzzy"
-
 " au FileType go nmap <Leader>s <Plug>(go-def-split)
 " au FileType go nmap <Leader>v <Plug>(go-def-vertical)
 " au FileType go nmap <Leader>i <Plug>(go-info)
@@ -589,7 +591,7 @@ let g:go_gopls_matcher = "fuzzy"
 
 " disable vim-go :GoDef short cut (gd)
 " this is handled by LanguageClient [LC]
-let g:go_def_mapping_enabled = 0
+let g:go_def_mapping_enabled = 1
 
 let g:go_gopls_enabled = 1
 let g:go_gopls_options=['-remote=auto']
@@ -610,8 +612,6 @@ let $FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --layout reverse --ma
 " endif
 "
 " NVIM-LSP
-
-set completeopt=menuone,noselect
 
 lua << EOF
 	require'lspconfig'.gopls.setup{}
@@ -756,6 +756,13 @@ lua << EOF
 	vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 
 EOF
+
+set completeopt=menuone,noselect
+
+highlight link CompeDocumentation NormalFloat
+
+" removes `pattern not found`
+set shortmess+=c
 
 inoremap <silent><expr> <C-space> compe#complete()
 inoremap <silent><expr> <CR>      compe#confirm('<CR>')

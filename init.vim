@@ -505,19 +505,7 @@ let g:vim_markdown_json_frontmatter = 1
 
 let g:airline_theme='term'
 
-let g:airline#extensions#coc#enabled = 1
-
-" let g:airline_extensions = ['coc']
-" let g:airline#extensions#default#layout = [['a', 'b', 'c'], ['x', 'z', 'warning', 'error']]
-" let g:airline_skip_empty_sections = 0
-" let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
-" let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
-" Configure error/warning section to use coc.nvim
-" let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
-" let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
-
 let g:airline_extensions#tabline#show_buffers = 1
-
 
 " =================== vim-terraform ========================
 
@@ -636,6 +624,9 @@ let $FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --layout reverse --ma
 " endif
 "
 " NVIM-LSP
+
+set completeopt=menuone,noselect
+
 lua << EOF
 	require'lspconfig'.gopls.setup{}
 	require'lspconfig'.tflint.setup{}

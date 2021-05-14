@@ -106,9 +106,6 @@
 [submodule "bundle/open-browser.vim"]
 	path = bundle/open-browser.vim
 	url = git@github.com:tyru/open-browser.vim.git
-[submodule "bundle/ultisnips"]
-	path = bundle/ultisnips
-	url = git@github.com:SirVer/ultisnips.git
 [submodule "bundle/fzf.vim"]
 	path = bundle/fzf.vim
 	url = git@github.com:junegunn/fzf.vim.git
@@ -124,3 +121,6 @@
 [submodule "bundle/nvim-compe"]
 	path = bundle/nvim-compe
 	url = git@github.com:hrsh7th/nvim-compe.git
+[submodule "bundle/ultisnips"]
+	path = bundle/ultisnips
+	url = git@github.com:SirVer/ultisnips.git

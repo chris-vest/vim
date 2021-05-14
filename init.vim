@@ -546,17 +546,17 @@ let g:go_fmt_fail_silently = 0
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
 let g:go_term_enabled = 1
-" let g:go_snippet_engine = "neosnippet"
-let g:go_highlight_space_tab_error = 0
-let g:go_highlight_array_whitespace_error = 0
-let g:go_highlight_trailing_whitespace_error = 0
+let g:go_snippet_engine = "ultisnips"
+let g:go_highlight_space_tab_error = 1
+let g:go_highlight_array_whitespace_error = 1
+let g:go_highlight_trailing_whitespace_error = 1
 let g:go_highlight_extra_types = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 let g:go_fmt_autosave = 1
-
-" automatically get type info under cursor
-let g:go_auto_type_info = 0
+let g:go_gopls_use_placeholders = 1
+let g:go_auto_type_info = 1
+let g:go_gopls_matcher = "fuzzy"
 
 " au FileType go nmap <Leader>s <Plug>(go-def-split)
 " au FileType go nmap <Leader>v <Plug>(go-def-vertical)
@@ -591,22 +591,8 @@ let g:go_auto_type_info = 0
 " this is handled by LanguageClient [LC]
 let g:go_def_mapping_enabled = 0
 
-let g:go_gopls_enabled = 0
+let g:go_gopls_enabled = 1
 let g:go_gopls_options=['-remote=auto']
-
-" -------------------------------------------------------------------------------------------------
-" utilsnips default settings
-" -------------------------------------------------------------------------------------------------
-
-" Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
-" - https://github.com/Valloric/YouCompleteMe
-" - https://github.com/nvim-lua/completion-nvim
-let g:UltiSnipsExpandTrigger="<S-Tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
 
 " fzf
 
@@ -688,19 +674,24 @@ lua << EOF
 	end
 EOF
 
-" COMPE autocomplete
+" ultisnips
 
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+" Trigger configuration
+let g:UltiSnipsExpandTrigger="<c-s>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+
+" COMPE autocomplete
 
 lua << EOF
 	require'compe'.setup {
 		enabled = true;
 		autocomplete = true;
-		debug = false;
+		debug = true;
 		min_length = 1;
 		preselect = 'enable';
 		throttle_time = 80;
@@ -717,7 +708,7 @@ lua << EOF
 			calc = true;
 			nvim_lsp = true;
 			nvim_lua = true;
-			vsnip = true;
+			vsnip = false;
 			ultisnips = true;
 		};
 	}
@@ -739,24 +730,24 @@ lua << EOF
 	--- move to prev/next item in completion menuone
 	--- jump to prev/next snippet's placeholder
 	_G.tab_complete = function()
-	if vim.fn.pumvisible() == 1 then
-		return t "<C-n>"
-	elseif vim.fn.call("vsnip#available", {1}) == 1 then
-		return t "<Plug>(vsnip-expand-or-jump)"
-	elseif check_back_space() then
-		return t "<Tab>"
-	else
-		return vim.fn['compe#complete']()
-	end
+		if vim.fn.pumvisible() == 1 then
+			return t "<C-n>"
+		elseif vim.fn.call("ultisnips#available", {1}) == 1 then
+			return t "<Plug>(ultisnips-expand-or-jump)"
+		elseif check_back_space() then
+			return t "<Tab>"
+		else
+			return vim.fn['compe#complete']()
+		end
 	end
 	_G.s_tab_complete = function()
-	if vim.fn.pumvisible() == 1 then
-		return t "<C-p>"
-	elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
-		return t "<Plug>(vsnip-jump-prev)"
-	else
-		return t "<S-Tab>"
-	end
+		if vim.fn.pumvisible() == 1 then
+			return t "<C-p>"
+		elseif vim.fn.call("ultisnips#jumpable", {-1}) == 1 then
+			return t "<Plug>(ultisnips-jump-prev)"
+		else
+			return t "<S-Tab>"
+		end
 	end
 
 	vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
@@ -765,3 +756,10 @@ lua << EOF
 	vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 
 EOF
+
+inoremap <silent><expr> <C-space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+

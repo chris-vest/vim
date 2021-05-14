@@ -94,10 +94,6 @@
 [submodule "bundle/dracula"]
 	path = bundle/dracula
 	url = git@github.com:dracula/vim.git
-[submodule "bundle/coc.nvim"]
-	path = bundle/coc.nvim
-	url = git@github.com:neoclide/coc.nvim.git
-	branch = release
 [submodule "bundle/vim-tmux-focus-events"]
 	path = bundle/vim-tmux-focus-events
 	url = git@github.com:tmux-plugins/vim-tmux-focus-events.git
@@ -116,3 +112,15 @@
 [submodule "bundle/fzf.vim"]
 	path = bundle/fzf.vim
 	url = git@github.com:junegunn/fzf.vim.git
+[submodule "bundle/fzf"]
+	path = bundle/fzf
+	url = git@github.com:junegunn/fzf.git
+[submodule "bundle/vim-rego"]
+	path = bundle/vim-rego
+	url = git@github.com:tsandall/vim-rego.git
+[submodule "bundle/nvim-lspconfig"]
+	path = bundle/nvim-lspconfig
+	url = git@github.com:neovim/nvim-lspconfig.git
+[submodule "bundle/nvim-compe"]
+	path = bundle/nvim-compe
+	url = git@github.com:hrsh7th/nvim-compe.git

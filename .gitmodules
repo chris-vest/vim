@@ -106,12 +106,6 @@
 [submodule "bundle/open-browser.vim"]
 	path = bundle/open-browser.vim
 	url = git@github.com:tyru/open-browser.vim.git
-[submodule "bundle/fzf.vim"]
-	path = bundle/fzf.vim
-	url = git@github.com:junegunn/fzf.vim.git
-[submodule "bundle/fzf"]
-	path = bundle/fzf
-	url = git@github.com:junegunn/fzf.git
 [submodule "bundle/vim-rego"]
 	path = bundle/vim-rego
 	url = git@github.com:tsandall/vim-rego.git
@@ -124,3 +118,12 @@
 [submodule "bundle/ultisnips"]
 	path = bundle/ultisnips
 	url = git@github.com:SirVer/ultisnips.git
+[submodule "bundle/popup.nvim"]
+	path = bundle/popup.nvim
+	url = git@github.com:nvim-lua/popup.nvim.git
+[submodule "bundle/plenary.nvim"]
+	path = bundle/plenary.nvim
+	url = git@github.com:nvim-lua/plenary.nvim.git
+[submodule "bundle/telescope.nvim"]
+	path = bundle/telescope.nvim
+	url = git@github.com:nvim-telescope/telescope.nvim.git

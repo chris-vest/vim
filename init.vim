@@ -596,21 +596,14 @@ let g:go_def_mapping_enabled = 1
 let g:go_gopls_enabled = 1
 let g:go_gopls_options=['-remote=auto']
 
-" fzf
+" telescope
 
-let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-h': 'split',
-  \ 'ctrl-x': 'vsplit' }
+" Using lua functions
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
-let $FZF_DEFAULT_OPTS="--ansi --preview-window 'right:60%' --layout reverse --margin=1,4 --preview 'batcat --color=always --style=header,grid --line-range :300 {}'"
-" See `man fzf-tmux` for available options
-" if exists('$TMUX')
-"   let g:fzf_layout = { 'tmux': '-p90%,60%' }
-" else
-"   let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
-" endif
-"
 " NVIM-LSP
 
 lua << EOF

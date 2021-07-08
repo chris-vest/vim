@@ -5,6 +5,11 @@ call pathogen#helptags()
 " colour scheme
 colorscheme dracula
 
+" vimdiff scheme
+if &diff
+    colorscheme dracula
+endif
+
 set nocompatible              " be iMproved, required
 filetype off                  " required
 

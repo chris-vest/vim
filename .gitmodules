@@ -10,9 +10,6 @@
 [submodule "bundle/vim-go"]
 	path = bundle/vim-go
 	url = git@github.com:fatih/vim-go.git
-[submodule "bundle/vim-toml"]
-	path = bundle/vim-toml
-	url = git@github.com:cespare/vim-toml.git
 [submodule "bundle/vim-better-whitespace"]
 	path = bundle/vim-better-whitespace
 	url = git@github.com:ntpeters/vim-better-whitespace.git
@@ -103,9 +100,6 @@
 [submodule "bundle/nvim-lspconfig"]
 	path = bundle/nvim-lspconfig
 	url = git@github.com:neovim/nvim-lspconfig.git
-[submodule "bundle/nvim-compe"]
-	path = bundle/nvim-compe
-	url = git@github.com:hrsh7th/nvim-compe.git
 [submodule "bundle/ultisnips"]
 	path = bundle/ultisnips
 	url = git@github.com:SirVer/ultisnips.git
@@ -121,3 +115,18 @@
 [submodule "bundle/nvim-treesitter"]
 	path = bundle/nvim-treesitter
 	url = git@github.com:nvim-treesitter/nvim-treesitter.git
+[submodule "bundle/completion-nvim"]
+	path = bundle/completion-nvim
+	url = git@github.com:nvim-lua/completion-nvim.git
+[submodule "bundle/nvim-cmp"]
+	path = bundle/nvim-cmp
+	url = git@github.com:hrsh7th/nvim-cmp.git
+[submodule "bundle/nvim-cmp-lsp"]
+	path = bundle/nvim-cmp-lsp
+	url = git@github.com:hrsh7th/cmp-nvim-lsp.git
+[submodule "bundle/cmp_luasnip"]
+	path = bundle/cmp_luasnip
+	url = git@github.com:saadparwaiz1/cmp_luasnip.git
+[submodule "bundle/LuaSnip"]
+	path = bundle/LuaSnip
+	url = git@github.com:L3MON4D3/LuaSnip.git

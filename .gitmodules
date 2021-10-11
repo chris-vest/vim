@@ -130,3 +130,6 @@
 [submodule "bundle/LuaSnip"]
 	path = bundle/LuaSnip
 	url = git@github.com:L3MON4D3/LuaSnip.git
+[submodule "bundle/lspkind-nvim"]
+	path = bundle/lspkind-nvim
+	url = git@github.com:onsails/lspkind-nvim.git

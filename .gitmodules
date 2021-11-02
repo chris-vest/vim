@@ -28,9 +28,6 @@
 [submodule "bundle/vim-buftabline"]
 	path = bundle/vim-buftabline
 	url = git@github.com:ap/vim-buftabline.git
-[submodule "bundle/vim-multiple-cursors"]
-	path = bundle/vim-multiple-cursors
-	url = git@github.com:terryma/vim-multiple-cursors.git
 [submodule "bundle/vim-airline"]
 	path = bundle/vim-airline
 	url = git@github.com:vim-airline/vim-airline.git
@@ -133,3 +130,6 @@
 [submodule "bundle/lspkind-nvim"]
 	path = bundle/lspkind-nvim
 	url = git@github.com:onsails/lspkind-nvim.git
+[submodule "bundle/vim-visual-multi"]
+	path = bundle/vim-visual-multi
+	url = git@github.com:mg979/vim-visual-multi.git

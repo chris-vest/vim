@@ -416,7 +416,7 @@ vnoremap <leader>gb :Gblame<CR>
 let g:vim_json_syntax_conceal = 0
 
 " ==================== vim-multiple-cursors ====================
-let g:VM_use_default_mapping=0
+" let g:VM_default_mappings = 1
 
 " ========= vim-better-whitespace ==================
 

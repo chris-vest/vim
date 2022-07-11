@@ -673,10 +673,3 @@ for _, lsp in ipairs(servers) do
 end
 EOF
 
-" lspkind-nvim
-lua << EOF
-require('lspkind').init({
-    with_text = true,
-    preset = 'default',
-})
-EOF

@@ -97,9 +97,6 @@
 [submodule "bundle/nvim-lspconfig"]
 	path = bundle/nvim-lspconfig
 	url = git@github.com:neovim/nvim-lspconfig.git
-[submodule "bundle/ultisnips"]
-	path = bundle/ultisnips
-	url = git@github.com:SirVer/ultisnips.git
 [submodule "bundle/popup.nvim"]
 	path = bundle/popup.nvim
 	url = git@github.com:nvim-lua/popup.nvim.git
@@ -112,24 +109,21 @@
 [submodule "bundle/nvim-treesitter"]
 	path = bundle/nvim-treesitter
 	url = git@github.com:nvim-treesitter/nvim-treesitter.git
-[submodule "bundle/completion-nvim"]
-	path = bundle/completion-nvim
-	url = git@github.com:nvim-lua/completion-nvim.git
 [submodule "bundle/nvim-cmp"]
 	path = bundle/nvim-cmp
 	url = git@github.com:hrsh7th/nvim-cmp.git
 [submodule "bundle/nvim-cmp-lsp"]
 	path = bundle/nvim-cmp-lsp
 	url = git@github.com:hrsh7th/cmp-nvim-lsp.git
-[submodule "bundle/cmp_luasnip"]
-	path = bundle/cmp_luasnip
-	url = git@github.com:saadparwaiz1/cmp_luasnip.git
-[submodule "bundle/LuaSnip"]
-	path = bundle/LuaSnip
-	url = git@github.com:L3MON4D3/LuaSnip.git
-[submodule "bundle/lspkind-nvim"]
-	path = bundle/lspkind-nvim
-	url = git@github.com:onsails/lspkind-nvim.git
 [submodule "bundle/vim-visual-multi"]
 	path = bundle/vim-visual-multi
 	url = git@github.com:mg979/vim-visual-multi.git
+[submodule "bundle/lspkind-nvim"]
+	path = bundle/lspkind-nvim
+	url = git@github.com:onsails/lspkind-nvim.git
+[submodule "bundle/ultisnips"]
+	path = bundle/ultisnips
+	url = git@github.com:SirVer/ultisnips.git
+[submodule "bundle/cmp-nvim-ultisnips"]
+	path = bundle/cmp-nvim-ultisnips
+	url = git@github.com:quangnguyen30192/cmp-nvim-ultisnips.git

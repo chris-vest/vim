@@ -295,9 +295,6 @@ nnoremap N Nzzzv
 "nnoremap <leader>. :lcd %:p:h<CR>
 autocmd BufEnter * silent! lcd %:p:h
 
-" trim all whitespaces away
-nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
-
 " Act like D and C
 nnoremap Y y$
 

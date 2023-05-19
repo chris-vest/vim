@@ -13,39 +13,11 @@ XDG_CONFIG_HOME=$(HOME)/.config
 # 	sudo ln -snf "$(HOME)/.vimrc" /root/.config/nvim/init.vim
 
 .PHONY: update
-update: update-vim-plug update-plugins ## Updates vim-plug and all plugins.
-
-.PHONY: update-plugins
-update-plugins: ## Updates all plugins.
-	git submodule update --init --recursive
-	git submodule foreach 'git pull --recurse-submodules origin master || git submodule foreach git pull --recurse-submodules origin main'
+update: update-vim-plug ## Updates vim-plug.
 
 .PHONY: update-vim-plug
 update-vim-plug: ## Updates vim-plug.
 	sh -c 'curl -fLo ${HOME}/.config/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
-.PHONY: README.md
-README.md: ## Generates and updates plugin info in README.md.
-	@sed -i '/Dockerfile/q' $@
-	@git  submodule --quiet foreach bash -c "echo -e \"* [\$$(git config --get remote.origin.url | sed 's#https://##' | sed 's#git://##' | sed 's/.git//')](\$$(git config --get remote.origin.url))\"" >> $@
-
-check_defined = \
-				$(strip $(foreach 1,$1, \
-				$(call __check_defined,$1,$(strip $(value 2)))))
-__check_defined = \
-				  $(if $(value $1),, \
-				  $(error Undefined $1$(if $2, ($2))$(if $(value @), \
-				  required by target `$@')))
-
-.PHONY: remove-submodule
-remove-submodule: ## Removes a git submodule (ex MODULE=bundle/nginx.vim).
-	@:$(call check_defined, MODULE, path of module to remove)
-	mv $(MODULE) $(MODULE).tmp
-	git submodule deinit -f -- $(MODULE)
-	$(RM) -r .git/modules/$(MODULE)
-	git rm -f $(MODULE)
-	$(RM) -r $(MODULE).tmp
-
 
 .PHONY: help
 help:

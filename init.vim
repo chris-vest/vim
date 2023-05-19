@@ -37,8 +37,8 @@ Plug 'tsandall/vim-rego'
 Plug 'tyru/open-browser-github.vim'
 Plug 'tyru/open-browser.vim'
 Plug 'uarun/vim-protobuf'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'wgwoods/vim-systemd-syntax'
 call plug#end()
 

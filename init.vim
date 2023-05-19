@@ -1,33 +1,17 @@
 call plug#begin()
-Plug 'SirVer/ultisnips'
-Plug 'Yggdroot/indentLine'
 Plug 'airblade/vim-gitgutter'
-Plug 'ap/vim-buftabline'
-Plug 'chr4/nginx.vim'
 Plug 'chris-vest/dracula'
 Plug 'easymotion/vim-easymotion'
-Plug 'ekalinin/Dockerfile.vim'
-Plug 'elzr/vim-json'
 Plug 'fatih/vim-go'
 Plug 'godlygeek/tabular'
-Plug 'hashivim/vim-terraform'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/nvim-cmp'
-Plug 'martinda/Jenkinsfile-vim-syntax'
 Plug 'mg979/vim-visual-multi'
 Plug 'moll/vim-bbye'
-Plug 'neovim/nvim-lspconfig'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-treesitter/nvim-treesitter'
-Plug 'onsails/lspkind-nvim'
-Plug 'plasticboy/vim-markdown'
-Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+Plug 'preservim/vim-markdown'
 Plug 'roxma/vim-tmux-clipboard'
-Plug 'rust-lang/rust.vim'
-Plug 'stephpy/vim-yaml'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
@@ -36,10 +20,28 @@ Plug 'tpope/vim-surround'
 Plug 'tsandall/vim-rego'
 Plug 'tyru/open-browser-github.vim'
 Plug 'tyru/open-browser.vim'
-Plug 'uarun/vim-protobuf'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'wgwoods/vim-systemd-syntax'
+Plug 'windwp/nvim-autopairs'
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+
+Plug 'neovim/nvim-lspconfig'
+
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
+
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'rafamadriz/friendly-snippets'
+
 call plug#end()
 
 " colour scheme
@@ -144,10 +146,6 @@ set shiftround
 set notimeout
 set ttimeout
 set ttimeoutlen=10
-
-" Better Completion
-set complete=.,w,b,u,t
-set completeopt=longest,menuone
 
 if &history < 1000
   set history=50
@@ -448,10 +446,6 @@ nnoremap <leader>gs :Gstatus<CR>
 nnoremap <leader>gp :Gpush<CR>
 vnoremap <leader>gb :Gblame<CR>
 
-" ==================== vim-json ====================
-
-let g:vim_json_syntax_conceal = 0
-
 " ==================== vim-multiple-cursors ====================
 " let g:VM_default_mappings = 1
 
@@ -489,16 +483,6 @@ let g:airline_theme='term'
 
 let g:airline_extensions#tabline#show_buffers = 1
 
-" =================== vim-terraform ========================
-
-" Allow vim-terraform to override your .vimrc indentation syntax for matching files.
-let g:terraform_align=1
-
-" Run terraform fmt on save.
-let g:terraform_fmt_on_save=1
-
-" vim:ts=2:sw=2:et
-
 " =================== gitgutter ===========================
 
 " Ensure gitgutter knows where the focus is
@@ -528,7 +512,7 @@ let g:go_fmt_fail_silently = 0
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
 let g:go_term_enabled = 1
-let g:go_snippet_engine = "ultisnips"
+let g:go_snippet_engine = "vsnip"
 let g:go_highlight_space_tab_error = 1
 let g:go_highlight_array_whitespace_error = 1
 let g:go_highlight_trailing_whitespace_error = 1
@@ -588,11 +572,13 @@ nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
 
 " tree-sitter
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
 	ensure_installed = all,
 	auto_install = true,
+	indent = {
+		enable = true
+	},
 	highlight = {
 		enable = true,
 		-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
@@ -604,117 +590,191 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
-"-- UltiSnips"
+"-- vim-vsnip "
 
-lua << EOF
-	require("cmp_nvim_ultisnips").setup {
-		filetype_source = "treesitter",
-		show_snippets = "all",
-		documentation = function(snippet)
-			return snippet.description
-		end
-	}
-EOF
+" Expand
+imap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
+smap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
 
-let g:UltiSnipsExpandTrigger='<tab>'
-let g:UltiSnipsJumpForwardTrigger='<c-b>'
-let g:UltiSnipsJumpBackwardTrigger='<c-z>'
-let g:UltiSnipsEditSplit='vertical'
+" Expand or jump
+imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
 
-" lspkind
+" Jump forward or backward
+imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
 
-lua << EOF
-	require('lspkind').init({
-		mode = 'symbol_text',
-		preset = 'codicons',
-	})
-EOF
+" Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
+" See https://github.com/hrsh7th/vim-vsnip/pull/50
+nmap        s   <Plug>(vsnip-select-text)
+xmap        s   <Plug>(vsnip-select-text)
+nmap        S   <Plug>(vsnip-cut-text)
+xmap        S   <Plug>(vsnip-cut-text)
+
+" If you want to use snippet for multiple filetypes, you can `g:vsnip_filetypes` for it.
+let g:vsnip_filetypes = {}
+
+"nvim-cmp
 
 lua <<EOF
-  -- Set completeopt to have a better completion experience
-  vim.o.completeopt = 'menuone,noselect'
-
-  -- Setup nvim-cmp.
+  -- Set up nvim-cmp.
   local cmp = require'cmp'
-  local lspkind = require('lspkind')
 
   cmp.setup({
     snippet = {
+      -- REQUIRED - you must specify a snippet engine
       expand = function(args)
-        vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
       end,
     },
-	sources = {
-		{ name = 'nvim_lsp' }
-	},
-	formatting = {
-		format = lspkind.cmp_format({
-			maxwidth = 50,
-		})
-	}
+    window = {
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'vsnip' }, -- For vsnip users.
+    }, {
+      { name = 'buffer' },
+      { name = 'nvim_lsp_signature_help' },
+    })
   })
 
-EOF
+  -- If you want insert `(` after select function or method item
+  require("nvim-autopairs").setup {}
+  local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+  cmp.event:on(
+    'confirm_done',
+    cmp_autopairs.on_confirm_done()
+  )
 
-"LSPCONFIG
+  -- Set configuration for specific filetype.
+  cmp.setup.filetype('gitcommit', {
+    sources = cmp.config.sources({
+      { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+    }, {
+      { name = 'buffer' },
+    })
+  })
 
-lua << EOF
-	-- Setup lspconfig.
-	local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' }
+    }
+  })
 
-	-- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
-	local capabilities = vim.lsp.protocol.make_client_capabilities()
-	capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
 
-	lspconfig = require "lspconfig"
-	util = require "lspconfig/util"
+  -- Set up lspconfig.
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+  -- require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
+  --  capabilities = capabilities
+  --}
+  require('lspconfig').terraformls.setup{}
 
-
-	lspconfig.gopls.setup {
-		capabilities = capabilities,
-		cmd = {"gopls", "serve"},
-		filetypes = {"go", "gomod"},
-		root_dir = util.root_pattern("go.work", "go.mod", ".git"),
-		settings = {
-			gopls = {
-				analyses = {
-					unusedparams = true,
-				},
-				staticcheck = true,
-			},
-		},
-	}
 EOF
 
 "NVIM-LSP
 
-lua << EOF
-	local opts = { noremap=true, silent=true }
-	vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-	vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-	vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-	vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+lua <<EOF
+    -- Global mappings.
+    -- See `:help vim.diagnostic.*` for documentation on any of the below functions
+    vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+    vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+    vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
 
-	local on_attach = function(client, bufnr)
-	vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    -- Use LspAttach autocommand to only map the following keys
+    -- after the language server attaches to the current buffer
+    vim.api.nvim_create_autocmd('LspAttach', {
+      group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+      callback = function(ev)
+        -- Enable completion triggered by <c-x><c-o>
+        vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-	local bufopts = { noremap=true, silent=true, buffer=bufnr }
-	vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-	vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-	vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-	vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-	vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-	vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-	vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-	vim.keymap.set('n', '<space>wl', function()
-		print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-	end, bufopts)
-	vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-	vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-	vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-	vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-	vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
+        -- Buffer local mappings.
+        -- See `:help vim.lsp.*` for documentation on any of the below functions
+        local opts = { buffer = ev.buf }
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+        vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+        vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+        vim.keymap.set('n', '<space>wl', function()
+          print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        end, opts)
+        vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+        vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+        vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+        vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+        vim.keymap.set('n', '<space>f', function()
+          vim.lsp.buf.format { async = true }
+        end, opts)
+      end,
+    })
+
+    -- gopls setup from nvim-cmp repo
+    vim.opt.completeopt = { "menu", "menuone", "noselect" }
+
+	local has_words_before = function()
+		local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+		return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 	end
 
-	require('lspconfig')['gopls'].setup{}
+	local feedkey = function(key, mode)
+		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+	end
+
+	local on_attach = function(client, bufnr)
+      local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+      local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+      buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+	end
+
+	-- Setup lspconfig.
+	local nvim_lsp = require('lspconfig')
+
+	-- setup languages
+	-- GoLang
+	nvim_lsp['gopls'].setup{
+		cmd = {'gopls'},
+		on_attach = on_attach,
+		capabilities = capabilities,
+		settings = {
+			gopls = {
+				experimentalPostfixCompletions = true,
+				analyses = {
+					unusedparams = true,
+					shadow = true,
+				},
+				staticcheck = true,
+			},
+		},
+		init_options = {
+			usePlaceholders = true,
+		}
+	}
 EOF

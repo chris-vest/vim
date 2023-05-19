@@ -13,16 +13,16 @@ XDG_CONFIG_HOME=$(HOME)/.config
 # 	sudo ln -snf "$(HOME)/.vimrc" /root/.config/nvim/init.vim
 
 .PHONY: update
-update: update-pathogen update-plugins ## Updates pathogen and all plugins.
+update: update-vim-plug update-plugins ## Updates vim-plug and all plugins.
 
 .PHONY: update-plugins
 update-plugins: ## Updates all plugins.
 	git submodule update --init --recursive
 	git submodule foreach 'git pull --recurse-submodules origin master || git submodule foreach git pull --recurse-submodules origin main'
 
-.PHONY: update-pathogen
-update-pathogen: ## Updates pathogen.
-	curl -LSso $(CURDIR)/autoload/pathogen.vim https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim
+.PHONY: update-vim-plug
+update-vim-plug: ## Updates vim-plug.
+	sh -c 'curl -fLo ${HOME}/.config/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
 .PHONY: README.md
 README.md: ## Generates and updates plugin info in README.md.

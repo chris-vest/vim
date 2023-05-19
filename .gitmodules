@@ -76,9 +76,6 @@
 [submodule "bundle/indentLine"]
 	path = bundle/indentLine
 	url = git@github.com:Yggdroot/indentLine.git
-[submodule "bundle/dracula"]
-	path = bundle/dracula
-	url = git@github.com:dracula/vim.git
 [submodule "bundle/vim-tmux-focus-events"]
 	path = bundle/vim-tmux-focus-events
 	url = git@github.com:tmux-plugins/vim-tmux-focus-events.git
@@ -127,3 +124,6 @@
 [submodule "bundle/cmp-nvim-ultisnips"]
 	path = bundle/cmp-nvim-ultisnips
 	url = git@github.com:quangnguyen30192/cmp-nvim-ultisnips.git
+[submodule "bundle/dracula"]
+	path = bundle/dracula
+	url = git@github.com:chris-vest/dracula.git

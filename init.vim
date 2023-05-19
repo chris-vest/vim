@@ -1,6 +1,46 @@
-" load plugins
-execute pathogen#infect()
-call pathogen#helptags()
+call plug#begin()
+Plug 'SirVer/ultisnips'
+Plug 'Yggdroot/indentLine'
+Plug 'airblade/vim-gitgutter'
+Plug 'ap/vim-buftabline'
+Plug 'chr4/nginx.vim'
+Plug 'chris-vest/dracula'
+Plug 'easymotion/vim-easymotion'
+Plug 'ekalinin/Dockerfile.vim'
+Plug 'elzr/vim-json'
+Plug 'fatih/vim-go'
+Plug 'godlygeek/tabular'
+Plug 'hashivim/vim-terraform'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'martinda/Jenkinsfile-vim-syntax'
+Plug 'mg979/vim-visual-multi'
+Plug 'moll/vim-bbye'
+Plug 'neovim/nvim-lspconfig'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'onsails/lspkind-nvim'
+Plug 'plasticboy/vim-markdown'
+Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+Plug 'roxma/vim-tmux-clipboard'
+Plug 'rust-lang/rust.vim'
+Plug 'stephpy/vim-yaml'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-git'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-surround'
+Plug 'tsandall/vim-rego'
+Plug 'tyru/open-browser-github.vim'
+Plug 'tyru/open-browser.vim'
+Plug 'uarun/vim-protobuf'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline'
+Plug 'wgwoods/vim-systemd-syntax'
+call plug#end()
 
 " colour scheme
 colorscheme dracula
@@ -548,6 +588,7 @@ nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
 
 " tree-sitter
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
 	ensure_installed = all,
@@ -563,7 +604,7 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
-" UltiSnips
+"-- UltiSnips"
 
 lua << EOF
 	require("cmp_nvim_ultisnips").setup {
@@ -575,11 +616,10 @@ lua << EOF
 	}
 EOF
 
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsExpandTrigger='<tab>'
+let g:UltiSnipsJumpForwardTrigger='<c-b>'
+let g:UltiSnipsJumpBackwardTrigger='<c-z>'
+let g:UltiSnipsEditSplit='vertical'
 
 " lspkind
 
@@ -589,8 +629,6 @@ lua << EOF
 		preset = 'codicons',
 	})
 EOF
-
-" LSP
 
 lua <<EOF
   -- Set completeopt to have a better completion experience
@@ -618,18 +656,19 @@ lua <<EOF
 
 EOF
 
-" LSPCONFIG
+"LSPCONFIG
 
 lua << EOF
 	-- Setup lspconfig.
-	local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+	local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 	-- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
-	capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+	capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 	lspconfig = require "lspconfig"
 	util = require "lspconfig/util"
+
 
 	lspconfig.gopls.setup {
 		capabilities = capabilities,
@@ -647,7 +686,7 @@ lua << EOF
 	}
 EOF
 
-" NVIM-LSP
+"NVIM-LSP
 
 lua << EOF
 	local opts = { noremap=true, silent=true }

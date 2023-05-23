@@ -17,7 +17,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
-Plug 'tsandall/vim-rego'
 Plug 'tyru/open-browser-github.vim'
 Plug 'tyru/open-browser.vim'
 Plug 'vim-airline/vim-airline'
@@ -508,8 +507,8 @@ map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 
 " ==================== Vim-go ====================
-let g:go_fmt_fail_silently = 0
-let g:go_fmt_command = "goimports"
+let g:go_fmt_fail_silently = 1
+let g:go_fmt_command = "gofmt"
 let g:go_autodetect_gopath = 1
 let g:go_term_enabled = 1
 let g:go_snippet_engine = "vsnip"
@@ -526,39 +525,7 @@ let g:go_fmt_autosave = 1
 let g:go_gopls_use_placeholders = 1
 let g:go_auto_type_info = 1
 let g:go_gopls_matcher = "fuzzy"
-" au FileType go nmap <Leader>s <Plug>(go-def-split)
-" au FileType go nmap <Leader>v <Plug>(go-def-vertical)
-" au FileType go nmap <Leader>i <Plug>(go-info)
-" au FileType go nmap <Leader>l <Plug>(go-metalinter)
-"
-" au FileType go nmap <leader>r  <Plug>(go-run)
-"
-" au FileType go nmap <leader>b  <Plug>(go-build)
-" au FileType go nmap <leader>t  <Plug>(go-test)
-" au FileType go nmap <leader>dt  <Plug>(go-test-compile)
-" au FileType go nmap <Leader>d <Plug>(go-doc)
-"
-" au FileType go nmap <Leader>e <Plug>(go-rename)
-"
-" " neovim specific
-" if has('nvim')
-"   au FileType go nmap <leader>rt <Plug>(go-run-tab)
-"   au FileType go nmap <Leader>rs <Plug>(go-run-split)
-"   au FileType go nmap <Leader>rv <Plug>(go-run-vertical)
-" endif
-"
-" " I like these more!
-" augroup go
-"   autocmd!
-"   autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
-"   autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
-"   autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
-" augroup END
-
-" disable vim-go :GoDef short cut (gd)
-" this is handled by LanguageClient [LC]
 let g:go_def_mapping_enabled = 1
-
 let g:go_gopls_enabled = 1
 let g:go_gopls_options=['-remote=auto']
 

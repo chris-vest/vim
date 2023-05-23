@@ -307,9 +307,6 @@ map <C-l> <C-W>l
 map <C-s-H> :execute "tabmove" tabpagenr() - 2 <CR>
 map <C-s-J> :execute "tabmove" tabpagenr() <CR>
 
-" Fast saving
-nmap <leader>w :w!<cr>
-
 " Center the screen
 nnoremap <space> zz
 
@@ -489,22 +486,10 @@ let g:gitgutter_terminal_reports_focus=0
 
 " =================== easymotion ===========================
 
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
-
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-nmap s <Plug>(easymotion-overwin-f)
-" or
-" `s{char}{char}{label}`
-" Need one more keystroke, but on average, it may be more comfortable.
-nmap s <Plug>(easymotion-overwin-f2)
-
+" disable default bindings
+"let g:EasyMotion_do_mapping = 0
 " Turn on case-insensitive feature
 let g:EasyMotion_smartcase = 1
-
-" JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
 
 " ==================== Vim-go ====================
 let g:go_fmt_fail_silently = 1

@@ -64,7 +64,7 @@ set undofile
 set undodir=~/.config/nvim/undo
 
 " number of undo saved
-set undolevels=10000
+set undolevels=1000
 
 "
 " Settings

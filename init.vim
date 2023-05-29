@@ -2,7 +2,6 @@ call plug#begin()
 Plug 'airblade/vim-gitgutter'
 Plug 'chris-vest/dracula'
 Plug 'easymotion/vim-easymotion'
-Plug 'fatih/vim-go'
 Plug 'godlygeek/tabular'
 Plug 'mg979/vim-visual-multi'
 Plug 'moll/vim-bbye'
@@ -24,11 +23,19 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'wgwoods/vim-systemd-syntax'
 Plug 'windwp/nvim-autopairs'
 
+"" debug adapter protocol
+Plug 'mfussenegger/nvim-dap'
+
+"" Treesitter
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 
+"" Mason
+Plug 'williamboman/mason.nvim', { 'do': ':MasonUpdate' }
+Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
 
+"" CMP
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
@@ -36,10 +43,15 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 
+"" snippets
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'rafamadriz/friendly-snippets'
+
+"" golang
+Plug 'fatih/vim-go'
+Plug 'leoluz/nvim-dap-go'
 
 call plug#end()
 
@@ -568,6 +580,24 @@ xmap        S   <Plug>(vsnip-cut-text)
 " If you want to use snippet for multiple filetypes, you can `g:vsnip_filetypes` for it.
 let g:vsnip_filetypes = {}
 
+" mason.nvim
+
+lua <<EOF
+require("mason").setup({
+    ui = {
+        icons = {
+            package_installed = "✓",
+            package_pending = "➜",
+            package_uninstalled = "✗"
+        }
+    }
+})
+
+require("mason-lspconfig").setup {
+	ensure_instsalled = { "gopls", "terraformls", "spectral" }
+}
+EOF
+
 "nvim-cmp
 
 lua <<EOF
@@ -749,5 +779,36 @@ lua <<EOF
 		init_options = {
 			usePlaceholders = true,
 		}
+	}
+
+	require('dap-go').setup {
+		-- Additional dap configurations can be added.
+		-- dap_configurations accepts a list of tables where each entry
+		-- represents a dap configuration. For more details do:
+		-- :help dap-configuration
+		dap_configurations = {
+			{
+			-- Must be "go" or it will be ignored by the plugin
+			type = "go",
+			name = "Attach remote",
+			mode = "remote",
+			request = "attach",
+			},
+		},
+		-- delve configurations
+		delve = {
+			-- the path to the executable dlv which will be used for debugging.
+			-- by default, this is the "dlv" executable on your PATH.
+			path = "dlv",
+			-- time to wait for delve to initialize the debug session.
+			-- default to 20 seconds
+			initialize_timeout_sec = 20,
+			-- a string that defines the port to start delve debugger.
+			-- default to string "${port}" which instructs nvim-dap
+			-- to start the process in a random available port
+			port = "${port}",
+			-- additional args to pass to dlv
+			args = {}
+		},
 	}
 EOF

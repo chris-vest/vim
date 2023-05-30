@@ -1,6 +1,3 @@
-vim.g.mapleader = ','
-vim.g.maplocalleader = ','
-
 -- Plugins
 local Plug = vim.fn['plug#']
 
@@ -75,6 +72,56 @@ Plug('ray-x/guihua.lua', {['do'] = 'cd lua/fzy && make' })
 
 vim.call('plug#end')
 
+-- Settings
+vim.g.mapleader = ','
+vim.g.maplocalleader = ','
+vim.o.mouse = 'a'
+vim.o.scrolloff = 4
+vim.o.timeoutlen = 300
+vim.o.formatoptions = "qrn1"
+vim.o.synmaxcol = 300
+vim.o.re = 1
+vim.o.conceallevel = 0
+vim.o.fileformats = "unix,dos,mac"
+vim.o.noshowmatch = true
+vim.o.noshowmode = true
+vim.o.incsearch = true
+vim.o.hlsearch = true
+vim.o.ignorecase = true
+vim.o.smartcase = true
+vim.o.ttyfast = true
+vim.o.lazyredraw = true
+vim.o.nocursorcolumn = true
+vim.o.nocursorline = true
+vim.o.noerrorbells = true
+vim.o.number = true
+vim.o.relativenumber = true
+vim.o.backspace = [[indent,eol,start]]
+vim.o.showcmd = true
+vim.o.showmode = true
+vim.o.clipboard = [[unnamed,unnamedplus]]
+vim.o.noswapfile = true
+vim.o.nobackup = true
+vim.o.nowritebackup = true
+vim.o.splitright = true
+vim.o.splitbelow = true
+vim.o.encoding = "utf-8"
+vim.o.autowrite = true
+vim.o.autoread = true
+vim.o.laststatus = 2
+vim.o.hidden = true
+vim.o.ruler = true
+vim.o.shell = "/bin/bash"
+vim.o.undofile = true
+vim.o.undodir = vim.fn.expand('~/.config/nvim/undo')
+vim.o.undolevels=1000
+vim.o.autoindent = true
+vim.o.showmatch = true
+vim.o.smarttab = true
+vim.o.background = "dark"
+vim.o.guifont = "Monospace:h15"
+
+-- Also settings but using Vimscript
 vim.cmd([[
   " Settings
 
@@ -85,21 +132,6 @@ vim.cmd([[
   if &diff
       colorscheme dracula
   endif
-
-  set nocompatible              " be iMproved, required
-  filetype off                  " required
-
-  filetype plugin indent on     " required
-
-  " set shell
-  set shell=/bin/bash
-
-  " save undo trees in files
-  set undofile
-  set undodir=~/.config/nvim/undo
-
-  " number of undo saved
-  set undolevels=1000
 
   " thanks jessfraz
   " When editing a file, always jump to the last known cursor position.
@@ -112,133 +144,16 @@ vim.cmd([[
         \	exe "normal! g`\"" |
         \ endif
 
-  set noerrorbells                " No beeps
-  set number                      " Show line numbers
-  set relativenumber              " Show relative line numbers
-  set backspace=indent,eol,start  " Makes backspace key more powerful.
-  set showcmd                     " Show me what I'm typing
-  set showmode                    " Show current mode.
-
-  set clipboard^=unnamed,unnamedplus       " Use system clipboard
-  set noswapfile                  " Don't use swapfile
-  set nobackup					" Don't create annoying backup files
-  set nowritebackup
-  set splitright                  " Split vertical windows right to the current windows
-  set splitbelow                  " Split horizontal windows below to the current windows
-  set encoding=utf-8              " Set default encoding to UTF-8
-  set autowrite                   " Automatically save before :next, :make etc.
-  set autoread                    " Automatically reread changed files without asking me anything
-  set laststatus=2
-  set hidden
-
-  set ruler                       " Show the cursor position all the time
   au FocusLost * :wa              " Set vim to save the file on focus out.
 
-  set fileformats=unix,dos,mac    " Prefer Unix over Windows over OS 9 formats
-
-  set noshowmatch                 " Do not show matching brackets by flickering
-  set noshowmode                  " We show the mode with airline or lightline
-  set incsearch                   " Shows the match while typing
-  set hlsearch                    " Highlight found searches
-  set ignorecase                  " Search case insensitive...
-  set smartcase                   " ... but not when search pattern contains upper case characters
-  set ttyfast
-  set lazyredraw                  " Wait to redraw "
-
-  " speed up syntax highlighting
-  set nocursorcolumn
-  set nocursorline
-
   syntax sync minlines=256
-  set synmaxcol=300
-  set re=1
-
-  " do not hide markdown
-  set conceallevel=0
-
   " open help vertically
   command! -nargs=* -complete=help Help vertical belowright help <args>
   autocmd FileType help wincmd L
 
-  " Make Vim handle long lines nicely.
-  " set wrap
-  " set textwidth=79
-  set formatoptions=qrn1
-  "set colorcolumn=150
-
-  " mail line wrapping
-  au BufRead /tmp/mutt-* set tw=72
-
-  set autoindent
-  set complete-=i
-  set showmatch
-  set smarttab
-
-  set et
-  set tabstop=4
-  set shiftwidth=4
-  set expandtab
-
-  set nrformats-=octal
-  set shiftround
-
-  " Time out on key codes but not mappings.
-  " Basically this makes terminal Vim work sanely.
-  set notimeout
-  set ttimeout
-  set ttimeoutlen=10
-
-  if &history < 1000
-    set history=50
-  endif
-
-  if &tabpagemax < 50
-    set tabpagemax=50
-  endif
-
-  if !empty(&viminfo)
-    set viminfo^=!
-  endif
-
-  if !&scrolloff
-    set scrolloff=1
-  endif
-  if !&sidescrolloff
-    set sidescrolloff=5
-  endif
-  set display+=lastline
-
   " CTRL-U in insert mode deletes a lot.	Use CTRL-G u to first break undo,
   " so that you can undo CTRL-U after inserting a line break.
   inoremap <C-U> <C-G>u<C-U>
-
-  " In many terminal emulators the mouse works just fine, thus enable it.
-  if has('mouse')
-    set mouse=a
-  endif
-
-  " If linux then set ttymouse
-  let s:uname = system("echo -n \"$(uname)\"")
-  if !v:shell_error && s:uname == "Linux" && !has('nvim')
-    set ttymouse=xterm
-  endif
-
-  syntax enable
-  if has('gui_running')
-    set transparency=3
-    " fix js regex syntax
-    set regexpengine=1
-    syntax enable
-  endif
-  set background=dark
-  set guifont=Monospace:h15
-  set guioptions-=L
-
-  " This comes first, because we have mappings that depend on leader
-  " With a map leader it's possible to do extra key combinations
-  " i.e: <leader>w saves the current file
-  let mapleader = ","
-  let g:mapleader = ","
 
   " map leader leader q to save and close all
   nnoremap <silent> <leader><leader>q :xa<CR>
@@ -290,33 +205,11 @@ vim.cmd([[
   " Do not show stupid q: window
   map q: :q
 
-  " sometimes this happens and I hate it
+  " handle fat fingers
   map :Vs :vs
   map :Sp :sp
-
-  " dont save .netrwhist history
-  let g:netrw_dirhistmax=0
-
-  " Wildmenu completion {{{
-  set wildmenu
-  " set wildmode=list:longest
-  set wildmode=list:full,full
-
-  set wildignore+=.hg,.git,.svn                    " Version control
-  set wildignore+=*.aux,*.out,*.toc                " LaTeX intermediate files
-  set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg   " binary images
-  set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest " compiled object files
-  set wildignore+=*.spl                            " compiled spelling word lists
-  set wildignore+=*.sw?                            " Vim swap files
-  set wildignore+=*.DS_Store                       " OSX bullshit
-  set wildignore+=*.luac                           " Lua byte code
-  set wildignore+=migrations                       " Django migrations
-  set wildignore+=go/pkg                           " Go static files
-  set wildignore+=go/bin                           " Go bin files
-  set wildignore+=go/bin-vagrant                   " Go bin-vagrant files
-  set wildignore+=*.pyc                            " Python byte code
-  set wildignore+=*.orig                           " Merge resolution files
 ]])
+
 
 -- Plugins
 

@@ -1,5 +1,4 @@
 call plug#begin()
-Plug 'airblade/vim-gitgutter'
 Plug 'chris-vest/dracula'
 Plug 'easymotion/vim-easymotion'
 Plug 'godlygeek/tabular'
@@ -18,10 +17,11 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tyru/open-browser-github.vim'
 Plug 'tyru/open-browser.vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'wgwoods/vim-systemd-syntax'
 Plug 'windwp/nvim-autopairs'
+
+"" statusline
+Plug 'nvim-lualine/lualine.nvim'
 
 "" debug adapter protocol
 Plug 'mfussenegger/nvim-dap'
@@ -485,16 +485,61 @@ let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_toml_frontmatter = 1
 let g:vim_markdown_json_frontmatter = 1
 
-" =================== vim-airline ========================
+" =================== lualine ========================
 
-let g:airline_theme='term'
-
-let g:airline_extensions#tabline#show_buffers = 1
-
-" =================== gitgutter ===========================
-
-" Ensure gitgutter knows where the focus is
-let g:gitgutter_terminal_reports_focus=0
+lua <<EOF
+	require('lualine').setup {
+		options = {
+			icons_enabled = true,
+			theme = 'dracula',
+			component_separators = { left = '', right = '|'},
+			section_separators = { left = '', right = '|'},
+			disabled_filetypes = {
+				statusline = {},
+				winbar = {},
+			},
+			ignore_focus = {},
+			always_divide_middle = true,
+			globalstatus = false,
+			refresh = {
+				statusline = 200,
+				tabline = 500,
+				winbar = 300,
+			}
+		},
+		sections = {
+			lualine_a = {'mode'},
+			lualine_b = {
+				{
+					'branch',
+					icons_enabled = false
+				},
+				'diff',
+				'diagnostics',
+			},
+			lualine_c = {'filename'},
+			lualine_x = {'encoding', 'filetype'},
+			lualine_y = {'progress'},
+			lualine_z = {'location'}
+		},
+		inactive_sections = {
+			lualine_a = {},
+			lualine_b = {'branch', 'diff', 'diagnostics'},
+			lualine_c = {'filename'},
+			lualine_x = {'encoding', 'filetype'},
+			lualine_y = {'progress'},
+			lualine_z = {'location'}
+		},
+		tabline = {},
+		winbar = {
+			lualine_a = {'tabs', 'windows'}
+		},
+		inactive_winbar = {
+			lualine_a = {'tabs', 'windows'}
+		},
+		extensions = {},
+	}
+EOF
 
 " =================== easymotion ===========================
 

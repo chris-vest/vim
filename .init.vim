@@ -1,17 +1,15 @@
 call plug#begin()
-
-Plug 'moll/vim-bbye'
-Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'tyru/open-browser-github.vim'
-Plug 'tyru/open-browser.vim'
-
 "" theme
 Plug 'chris-vest/dracula'
 
 "" utility
 Plug 'nvim-lua/plenary.nvim'
 Plug 'tpope/vim-sensible'
+Plug 'moll/vim-bbye'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'tyru/open-browser-github.vim'
+Plug 'tyru/open-browser.vim'
 
 "" formatting
 Plug 'godlygeek/tabular'
@@ -38,6 +36,8 @@ Plug 'nvim-lualine/lualine.nvim'
 
 "" debug adapter protocol
 Plug 'mfussenegger/nvim-dap'
+Plug 'rcarriga/nvim-dap-ui'
+Plug 'leoluz/nvim-dap-go'
 
 "" Treesitter
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -57,16 +57,17 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 
 "" snippets
-Plug 'hrsh7th/cmp-vsnip'
-Plug 'hrsh7th/vim-vsnip'
-Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'L3MON4D3/LuaSnip'
+Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
 
 "" golang
-Plug 'fatih/vim-go'
-Plug 'leoluz/nvim-dap-go'
+Plug 'ray-x/go.nvim'
+Plug 'ray-x/guihua.lua', {'do': 'cd lua/fzy && make' }
 
 call plug#end()
+
+" Settings
 
 " colour scheme
 colorscheme dracula
@@ -91,9 +92,17 @@ set undodir=~/.config/nvim/undo
 " number of undo saved
 set undolevels=1000
 
-"
-" Settings
-"
+" thanks jessfraz
+" When editing a file, always jump to the last known cursor position.
+" Don't do it when the position is invalid or when inside an event handler
+" (happens when dropping a file on gvim).
+" Also don't do it when the mark is in the first line, that is the default
+" position when opening a file.
+autocmd BufReadPost *
+      \ if line("'\"") > 1 && line("'\"") <= line("$") |
+      \	exe "normal! g`\"" |
+      \ endif
+
 set noerrorbells                " No beeps
 set number                      " Show line numbers
 set relativenumber              " Show relative line numbers
@@ -125,8 +134,7 @@ set hlsearch                    " Highlight found searches
 set ignorecase                  " Search case insensitive...
 set smartcase                   " ... but not when search pattern contains upper case characters
 set ttyfast
-" set ttyscroll=3               " noop on linux ?
-set lazyredraw          	    " Wait to redraw "
+set lazyredraw                  " Wait to redraw "
 
 " speed up syntax highlighting
 set nocursorcolumn
@@ -223,27 +231,6 @@ set guioptions-=L
 let mapleader = ","
 let g:mapleader = ","
 
-" This trigger takes advantage of the fact that the quickfix window can be
-" easily distinguished by its file-type, qf. The wincmd J command is
-" equivalent to the Ctrl+W, Shift+J shortcut telling Vim to move a window to
-" the very bottom (see :help :wincmd and :help ^WJ).
-autocmd FileType qf wincmd J
-
-" Dont show me any output when I build something
-" Because I am using quickfix for errors
-"nmap <leader>m :make<CR><enter>
-
-" Some useful quickfix shortcuts
-":cc      see the current error
-":cn      next error
-":cp      previous error
-":clist   list all errors
-map <C-n> :cn<CR>
-map <C-m> :cp<CR>
-
-" Close quickfix easily
-nnoremap <leader>a :cclose<CR>
-
 " map leader leader q to save and close all
 nnoremap <silent> <leader><leader>q :xa<CR>
 " map leader leader w to save
@@ -321,15 +308,7 @@ set wildignore+=go/bin-vagrant                   " Go bin-vagrant files
 set wildignore+=*.pyc                            " Python byte code
 set wildignore+=*.orig                           " Merge resolution files
 
-" ----------------------------------------- "
-" Plugin configs 			    			"
-" ----------------------------------------- "
-
-" ==================== Fugitive ====================
-nnoremap <leader>ga :Git add %:p<CR><CR>
-nnoremap <leader>gs :Gstatus<CR>
-nnoremap <leader>gp :Gpush<CR>
-vnoremap <leader>gb :Gblame<CR>
+"" Plugins
 
 " ========= vim-better-whitespace ==================
 
@@ -418,37 +397,14 @@ lua <<EOF
 	end, {remap=true})
 EOF
 
-"" Vim-go
-let g:go_fmt_fail_silently = 1
-let g:go_fmt_command = "gofmt"
-let g:go_autodetect_gopath = 1
-let g:go_term_enabled = 1
-let g:go_snippet_engine = "vsnip"
-let g:go_highlight_space_tab_error = 1
-let g:go_highlight_array_whitespace_error = 1
-let g:go_highlight_trailing_whitespace_error = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_structs = 1
-let g:go_highlight_interfaces = 1
-let g:go_highlight_operators = 1
-let g:go_fmt_autosave = 1
-let g:go_gopls_use_placeholders = 1
-let g:go_auto_type_info = 1
-let g:go_gopls_matcher = "fuzzy"
-let g:go_def_mapping_enabled = 1
-let g:go_gopls_enabled = 1
-let g:go_gopls_options=['-remote=auto']
-
 " telescope
-
-" Using lua functions
-nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
-nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
-nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
-nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
-
+lua <<EOF
+    local builtin = require('telescope.builtin')
+    vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+    vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+    vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+    vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
+EOF
 
 " tree-sitter
 lua <<EOF
@@ -469,33 +425,7 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
-"-- vim-vsnip "
-
-" Expand
-imap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-smap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
-
-" Expand or jump
-imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
-
-" Jump forward or backward
-imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
-imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-
-" Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
-" See https://github.com/hrsh7th/vim-vsnip/pull/50
-nmap        s   <Plug>(vsnip-select-text)
-xmap        s   <Plug>(vsnip-select-text)
-nmap        S   <Plug>(vsnip-cut-text)
-xmap        S   <Plug>(vsnip-cut-text)
-
-" If you want to use snippet for multiple filetypes, you can `g:vsnip_filetypes` for it.
-let g:vsnip_filetypes = {}
-
-" mason.nvim
+"" mason.nvim
 
 lua <<EOF
 require("mason").setup({
@@ -513,17 +443,24 @@ require("mason-lspconfig").setup {
 }
 EOF
 
-"nvim-cmp
+"" nvim-cmp
 
 lua <<EOF
   -- Set up nvim-cmp.
-  local cmp = require'cmp'
+  local has_words_before = function()
+    unpack = unpack or table.unpack
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+  end
+
+  local luasnip = require("luasnip")
+  local cmp = require("cmp")
 
   cmp.setup({
     snippet = {
       -- REQUIRED - you must specify a snippet engine
       expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
       end,
     },
     window = {
@@ -535,20 +472,24 @@ lua <<EOF
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<C-Space>'] = cmp.mapping.complete(),
       ['<C-e>'] = cmp.mapping.abort(),
-      ['<CR>'] = cmp.mapping.confirm {
-        behavior = cmp.ConfirmBehavior.Replace,
-        select = true,
-      },
-      ['<Tab>'] = cmp.mapping(function(fallback)
+      ['<CR>'] = cmp.mapping.confirm ({
+          behavior = cmp.ConfirmBehavior.Insert,
+          select = true
+      }),
+      ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
+        -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+        -- they way you will only jump inside the snippet region
         elseif luasnip.expand_or_jumpable() then
           luasnip.expand_or_jump()
+        elseif has_words_before() then
+          cmp.complete()
         else
           fallback()
         end
-      end, { 'i', 's' }),
-      ['<S-Tab>'] = cmp.mapping(function(fallback)
+      end, { "i", "s" }),
+      ["<S-Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_prev_item()
         elseif luasnip.jumpable(-1) then
@@ -556,13 +497,13 @@ lua <<EOF
         else
           fallback()
         end
-      end, { 'i', 's' }),
+      end, { "i", "s" }),
     }),
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
-      { name = 'vsnip' }, -- For vsnip users.
-    }, {
+      { name = 'luasnip' }, -- For luasnip users.
       { name = 'buffer' },
+      { name = 'path' },
       { name = 'nvim_lsp_signature_help' },
     })
   })
@@ -612,8 +553,13 @@ lua <<EOF
 
 EOF
 
-"NVIM-LSP
+"" luasnip
 
+lua <<EOF
+    require("luasnip.loaders.from_vscode").load({ include = { "go" } }) -- Load only golang snippets
+EOF
+
+"" NVIM-LSP
 lua <<EOF
     -- Global mappings.
     -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -652,50 +598,43 @@ lua <<EOF
         end, opts)
       end,
     })
+EOF
 
-    -- gopls setup from nvim-cmp repo
-    vim.opt.completeopt = { "menu", "menuone", "noselect" }
+"" go.nvim
+lua <<EOF
+    -- go.nvim
+    require('go').setup{
+        goimport = 'gopls', -- if set to 'gopls' will use golsp format
+        gofmt = 'gopls', -- if set to gopls will use golsp format
+        max_line_len = 120,
+        tag_transform = false,
+        test_dir = '',
+        comment_placeholder = '   ',
+        dap_debug = true,
+        lsp_codelens = true,
+        lsp_cfg = false,
+    }
+    local cfg = require'go.lsp'.config() -- config() return the go.nvim gopls setup
+    require('lspconfig').gopls.setup(cfg)
 
-	local has_words_before = function()
-		local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-		return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-	end
+    -- guihua floating window
+    require('guihua.maps').setup({
+        maps = {
+            close_view = '<C-q>',
+        }
+    })
 
-	local feedkey = function(key, mode)
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
-	end
+    -- Run gofmt + goimport on save
+    local format_sync_grp = vim.api.nvim_create_augroup("GoImport", {})
+    vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = "*.go",
+        callback = function()
+        require('go.format').goimport()
+        end,
+        group = format_sync_grp,
+    })
 
-	local on_attach = function(client, bufnr)
-      local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-      local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-      buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-	end
-
-	-- Setup lspconfig.
-	local nvim_lsp = require('lspconfig')
-
-	-- setup languages
-	-- GoLang
-	nvim_lsp['gopls'].setup{
-		cmd = {'gopls'},
-		on_attach = on_attach,
-		capabilities = capabilities,
-		settings = {
-			gopls = {
-				experimentalPostfixCompletions = true,
-				analyses = {
-					unusedparams = true,
-					shadow = true,
-				},
-				staticcheck = true,
-			},
-		},
-		init_options = {
-			usePlaceholders = true,
-		}
-	}
-
+    require("dapui").setup()
 	require('dap-go').setup {
 		-- Additional dap configurations can be added.
 		-- dap_configurations accepts a list of tables where each entry

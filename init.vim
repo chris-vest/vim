@@ -1,6 +1,7 @@
 call plug#begin()
+"" theme
 Plug 'chris-vest/dracula'
-Plug 'easymotion/vim-easymotion'
+
 Plug 'godlygeek/tabular'
 Plug 'mg979/vim-visual-multi'
 Plug 'moll/vim-bbye'
@@ -9,8 +10,6 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'preservim/vim-markdown'
-Plug 'roxma/vim-tmux-clipboard'
-Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-sensible'
@@ -19,6 +18,16 @@ Plug 'tyru/open-browser-github.vim'
 Plug 'tyru/open-browser.vim'
 Plug 'wgwoods/vim-systemd-syntax'
 Plug 'windwp/nvim-autopairs'
+
+"" tmux
+Plug 'roxma/vim-tmux-clipboard'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+
+"" git / vcs sign column
+Plug 'mhinz/vim-signify'
+
+"" motion
+Plug 'phaazon/hop.nvim'
 
 "" statusline
 Plug 'nvim-lualine/lualine.nvim'
@@ -541,14 +550,28 @@ lua <<EOF
 	}
 EOF
 
-" =================== easymotion ===========================
+"" hop.nvim
+lua <<EOF
+	require'hop'.setup()
 
-" disable default bindings
-"let g:EasyMotion_do_mapping = 0
-" Turn on case-insensitive feature
-let g:EasyMotion_smartcase = 1
+	-- keybindings
+	local hop = require('hop')
+	local directions = require('hop.hint').HintDirection
+	vim.keymap.set('', '<leader>f', function()
+	hop.hint_char2({ direction = directions.AFTER_CURSOR, current_line_only = false })
+	end, {remap=true})
+	vim.keymap.set('', '<leader>F', function()
+	hop.hint_char2({ direction = directions.BEFORE_CURSOR, current_line_only = false })
+	end, {remap=true})
+	vim.keymap.set('', '<leader>w', function()
+	hop.hint_words({ direction = directions.AFTER_CURSOR, current_line_only = false })
+	end, {remap=true})
+	vim.keymap.set('', '<leader>W', function()
+	hop.hint_words({ direction = directions.BEFORE_CURSOR, current_line_only = false })
+	end, {remap=true})
+EOF
 
-" ==================== Vim-go ====================
+"" Vim-go
 let g:go_fmt_fail_silently = 1
 let g:go_fmt_command = "gofmt"
 let g:go_autodetect_gopath = 1

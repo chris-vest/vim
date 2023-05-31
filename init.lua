@@ -75,51 +75,256 @@ vim.call('plug#end')
 -- Settings
 vim.g.mapleader = ','
 vim.g.maplocalleader = ','
+
+-- Helper function for config
+local fn = vim.fn
+local api = vim.api
+local executable = function(e)
+  return fn.executable(e) > 0
+end
+
+local opts_info = vim.api.nvim_get_all_options_info()
+
+local opt = setmetatable(
+                {}, {
+      __newindex = function(_, key, value)
+        vim.o[key] = value
+        local scope = opts_info[key].scope
+        if scope == 'win' then
+          vim.wo[key] = value
+        elseif scope == 'buf' then
+          vim.bo[key] = value
+        end
+      end
+    }
+            )
+
+local function add(value, str, sep)
+  sep = sep or ','
+  str = str or ''
+  value = type(value) == 'table' and table.concat(value, sep) or value
+  return str ~= '' and table.concat({ value, str }, sep) or value
+end
+
+-- Mouse
 vim.o.mouse = 'a'
-vim.o.scrolloff = 4
-vim.o.timeoutlen = 300
-vim.o.formatoptions = "qrn1"
-vim.o.synmaxcol = 300
-vim.o.re = 1
-vim.o.conceallevel = 0
-vim.o.fileformats = "unix,dos,mac"
-vim.o.noshowmatch = true
-vim.o.noshowmode = true
-vim.o.incsearch = true
-vim.o.hlsearch = true
-vim.o.ignorecase = true
-vim.o.smartcase = true
-vim.o.ttyfast = true
-vim.o.lazyredraw = true
-vim.o.nocursorcolumn = true
-vim.o.nocursorline = true
-vim.o.noerrorbells = true
+vim.o.mousefocus = true
+
+-- Numbers
+
 vim.o.number = true
 vim.o.relativenumber = true
-vim.o.backspace = [[indent,eol,start]]
-vim.o.showcmd = true
-vim.o.showmode = true
-vim.o.clipboard = [[unnamed,unnamedplus]]
-vim.o.noswapfile = true
-vim.o.nobackup = true
-vim.o.nowritebackup = true
-vim.o.splitright = true
-vim.o.splitbelow = true
-vim.o.encoding = "utf-8"
-vim.o.autowrite = true
-vim.o.autoread = true
-vim.o.laststatus = 2
+
+-- Timings
+
+vim.o.updatetime = 1000
+vim.o.timeout = true
+vim.o.timeoutlen = 500
+vim.o.ttimeoutlen = 10
+
+-- Window splitting and buffers
+
+opt.ruler = true
 vim.o.hidden = true
-vim.o.ruler = true
-vim.o.shell = "/bin/bash"
-vim.o.undofile = true
-vim.o.undodir = vim.fn.expand('~/.config/nvim/undo')
-vim.o.undolevels=1000
-vim.o.autoindent = true
-vim.o.showmatch = true
-vim.o.smarttab = true
-vim.o.background = "dark"
+vim.o.encoding = 'utf-8'
+vim.o.fileencoding = 'utf-8'
+vim.o.splitbelow = true
+vim.o.splitright = true
+vim.o.eadirection = 'hor'
+vim.o.t_Co = 'xterm-256color'
+-- exclude usetab as we do not want to jump to buffers in already open tabs
+-- do not use split or vsplit to ensure we don't open any new windows
+vim.o.switchbuf = 'useopen,uselast'
+vim.o.fillchars = add {
+  'vert:▕', -- alternatives │
+  'fold: ',
+  'eob: ', -- suppress ~ at EndOfBuffer
+  'diff:─', -- alternatives: ⣿ ░
+  'msgsep:‾',
+  'foldopen:▾',
+  'foldsep:│',
+  'foldclose:▸'
+}
+
+-- Diff
+
+-- Use in vertical diff mode, blank lines to keep sides aligned, Ignore whitespace changes
+vim.o.diffopt = add(
+                    {
+      'vertical',
+      'iwhite',
+      'hiddenoff',
+      'foldcolumn:0',
+      'context:4',
+      'algorithm:histogram',
+      'indent-heuristic'
+    }, vim.o.diffopt
+                    )
+
+-- Format Options
+
+opt.formatoptions = table.concat(
+                        {
+      '1',
+      'q', -- continue comments with gq"
+      'c', -- Auto-wrap comments using textwidth
+      'r', -- Continue comments when pressing Enter
+      'n', -- Recognize numbered lists
+      '2', -- Use indent from 2nd line of a paragraph
+      't', -- autowrap lines using text width value
+      'j', -- remove a comment leader when joining lines.
+      -- Only break if the line was not longer than 'textwidth' when the insert
+      -- started and only at a white character that has been entered during the
+      -- current insert command.
+      'lv'
+    }
+                    )
+
+-- Folds
+
+vim.o.foldtext = 'v:lua.folds()'
+vim.o.foldopen = add(vim.o.foldopen, 'search')
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 10
+opt.foldmethod = 'syntax'
+
+-- Grepprg
+
+-- Use faster grep alternatives if possible
+if executable('rg') then
+  vim.o.grepprg =
+      [[rg --hidden --glob "!.git" --no-heading --smart-case --vimgrep --follow $*]]
+  vim.o.grepformat = add('%f:%l:%c:%m', vim.o.grepformat)
+elseif executable('ag') then
+  vim.o.grepprg = [[ag --nogroup --nocolor --vimgrep]]
+  vim.o.grepformat = add('%f:%l:%c:%m', vim.o.grepformat)
+end
+
+-- Wild and file globbing stuff in command mode
+
+vim.o.wildcharm = api.nvim_eval([[char2nr("\<C-Z>")]]) -- FIXME: what's the correct way to do this?
+vim.o.wildmenu = true
+vim.o.wildmode = 'full' -- Shows a menu bar as opposed to an enormous list
+vim.o.wildignorecase = true -- Ignore case when completing file names and directories
+-- Binary
+vim.o.wildignore = add {
+  '*.aux,*.out,*.toc',
+  '*.o,*.obj,*.dll,*.jar,*.pyc,*.rbc,*.class',
+  '*.ai,*.bmp,*.gif,*.ico,*.jpg,*.jpeg,*.png,*.psd,*.webp',
+  '*.avi,*.m4a,*.mp3,*.oga,*.ogg,*.wav,*.webm',
+  '*.eot,*.otf,*.ttf,*.woff',
+  '*.doc,*.pdf',
+  '*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz',
+  -- Cache
+  '.sass-cache',
+  '*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*.gem',
+  -- Temp/System
+  '*.*~,*~ ',
+  '*.swp,.lock,.DS_Store,._*,tags.lock',
+  -- golang
+  'go/pkg,go/bin,go/bin-vagrant',
+  -- lua
+  '.luac'
+}
+vim.o.wildoptions = 'pum'
+vim.o.pumblend = 3 -- Make popup window translucent
+
+-- Display
+
+opt.conceallevel = 0
+opt.breakindentopt = 'sbr'
+opt.linebreak = true -- lines wrap at words rather than random characters
+opt.signcolumn = 'yes:1'
+opt.colorcolumn = '+1' -- Set the colour column to highlight one column after the 'textwidth'
+vim.o.cmdheight = 1 -- Set command line height to one lines
+vim.o.showbreak = [[↪ ]] -- Options include -> '…', '↳ ', '→','↪ '
+vim.g.vimsyn_embed = 'lPr' -- allow embedded syntax highlighting for lua,python and ruby
+
+-- Indentation
+
+opt.wrap = true
+opt.wrapmargin = 2
+opt.softtabstop = 2
+opt.textwidth = 80
+opt.shiftwidth = 2
+opt.expandtab = true
+opt.smarttab = true
+opt.autoindent = true
+opt.smartindent = true
+opt.breakindent = true
+vim.o.shiftround = true
+
+-- Utilities
+vim.o.joinspaces = false
+vim.o.gdefault = false
+vim.o.pumheight = 15
+vim.o.confirm = false -- prompt when exiting with unsaved buffers
+vim.o.completeopt = add { 'menuone', 'noinsert', 'noselect' }
+vim.o.hlsearch = true
+vim.o.autowrite = true
+vim.o.autowriteall = true -- automatically :write before running commands and changing files
+vim.o.clipboard = [[unnamed,unnamedplus]]
+vim.o.lazyredraw = true
+vim.o.laststatus = 2
+vim.o.showtabline = 1
+vim.o.nocursorcolumn = true
+vim.o.nocursorline = true
+vim.o.ttyfast = true
+vim.o.belloff = 'all'
+vim.o.termguicolors = true
+vim.o.background = 'dark'
 vim.o.guifont = "Monospace:h15"
+vim.o.showmode = true
+vim.o.showcmd = true
+vim.o.backup = false
+vim.o.writebackup = false
+vim.o.visualbell = true
+vim.o.errorbells = false
+
+vim.o.autoread = true
+vim.o.mat = 2
+vim.o.backspace = add { 'indent', 'eol', 'start' }
+
+-- BACKUP AND SWAPS
+
+vim.o.history = 1000
+vim.o.swapfile = false
+vim.o.backup = false
+vim.o.writebackup = false
+vim.o.undodir = vim.fn.expand('~/.config/nvim/undo')
+if fn.isdirectory(vim.o.undodir) == 0 then
+  fn.mkdir(vim.o.undodir, 'p')
+end
+opt.undofile = true
+vim.o.undolevels=500
+
+-- Match and search
+
+vim.o.showmatch = true
+vim.o.magic = true
+vim.o.ignorecase = true
+vim.o.smartcase = true
+vim.o.incsearch = true
+vim.o.wrapscan = true -- Searches wrap around the end of the file
+vim.o.scrolloff = 9
+vim.o.sidescrolloff = 10
+vim.o.sidescroll = 1
+
+-- Spelling
+
+vim.o.spellsuggest = add(12, vim.o.spellsuggest)
+vim.o.spelloptions = 'camel'
+vim.o.spellcapcheck = '' -- don't check for capital letters at start of sentence
+vim.o.fileformats = 'unix,mac,dos'
+vim.o.complete = add('kspell', vim.o.complete)
+
+-- Mouse
+
+vim.o.mouse = 'a'
+vim.o.mousefocus = true
+
+-- Shell
+vim.o.shell = "/bin/bash"
 
 -- Also settings but using Vimscript
 vim.cmd([[

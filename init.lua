@@ -267,8 +267,8 @@ vim.o.clipboard = [[unnamed,unnamedplus]]
 vim.o.lazyredraw = true
 vim.o.laststatus = 2
 vim.o.showtabline = 1
-vim.o.nocursorcolumn = true
-vim.o.nocursorline = true
+vim.o.cursorcolumn = false
+vim.o.cursorline = false
 vim.o.ttyfast = true
 vim.o.belloff = 'all'
 vim.o.termguicolors = true
@@ -459,7 +459,7 @@ require('lualine').setup {
       'diff',
       'diagnostics',
     },
-    lualine_c = {'filename'},
+    lualine_c = {},
     lualine_x = {'encoding', 'filetype'},
     lualine_y = {'progress'},
     lualine_z = {'location'}
@@ -467,17 +467,17 @@ require('lualine').setup {
   inactive_sections = {
     lualine_a = {},
     lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {'filename'},
+    lualine_c = {},
     lualine_x = {'encoding', 'filetype'},
     lualine_y = {'progress'},
     lualine_z = {'location'}
   },
   tabline = {},
   winbar = {
-    lualine_a = {'tabs', 'windows'}
+    lualine_a = {'buffers'}
   },
   inactive_winbar = {
-    lualine_a = {'tabs', 'windows'}
+    lualine_a = {'buffers'}
   },
   extensions = {},
 }

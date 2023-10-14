@@ -4,14 +4,14 @@ local Plug = vim.fn['plug#']
 vim.call('plug#begin')
 
 -- theme
-Plug 'chris-vest/dracula'
+Plug 'dracula/vim'
 
 -- utility
 Plug 'nvim-lua/plenary.nvim'
 Plug 'tpope/vim-sensible'
 Plug 'moll/vim-bbye'
 Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-telescope/telescope.nvim'
+Plug('nvim-telescope/telescope.nvim', {['tag'] = '0.1.4'})
 Plug 'tyru/open-browser-github.vim'
 Plug 'tyru/open-browser.vim'
 
@@ -539,7 +539,7 @@ require("mason").setup({
 
 -- mason-lspconfig
 require("mason-lspconfig").setup {
-	ensure_instsalled = { "gopls", "terraformls", "spectral" }
+	ensure_instsalled = { "gopls", "terraformls", "spectral", "rust_analyzer" }
 }
 
 -- nvim-cmp

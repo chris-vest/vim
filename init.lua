@@ -333,6 +333,7 @@ vim.cmd([[
   " colour scheme
   colorscheme dracula
 
+
   " vimdiff scheme
   if &diff
       colorscheme dracula
@@ -415,6 +416,8 @@ vim.cmd([[
   map :Sp :sp
 ]])
 
+-- Override dracula theme with tmux settings
+vim.cmd([[highlight Normal ctermfg=253 ctermbg=none guifg=#f8f8f2 guibg=none]])
 
 -- Plugins
 

@@ -4,7 +4,7 @@ local Plug = vim.fn['plug#']
 vim.call('plug#begin')
 
 -- theme
-Plug 'dracula/vim'
+Plug 'Mofiqul/dracula.nvim'
 
 -- utility
 Plug 'nvim-lua/plenary.nvim'
@@ -273,7 +273,6 @@ vim.o.ttyfast = true
 vim.o.belloff = 'all'
 vim.o.termguicolors = true
 vim.o.background = 'dark'
-vim.o.guifont = "Monospace:h15"
 vim.o.showmode = true
 vim.o.showcmd = true
 vim.o.backup = false
@@ -326,13 +325,16 @@ vim.o.mousefocus = true
 -- Shell
 vim.o.shell = "/bin/bash"
 
+local dracula = require("dracula")
+dracula.setup({
+  transparent_bg = true,
+})
+
+vim.cmd[[colorscheme dracula]]
+
 -- Also settings but using Vimscript
 vim.cmd([[
   " Settings
-
-  " colour scheme
-  colorscheme dracula
-
 
   " vimdiff scheme
   if &diff
@@ -513,7 +515,7 @@ vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
 -- tree-sitter
 require'nvim-treesitter.configs'.setup {
-	ensure_installed = all,
+	ensure_installed = { "go", "rust", "python", "perl", "bash", "vim", "lua", "c", "json", "yaml", "hcl", "gomod", "gosum", "gitignore", "gitcommit", "fish", "dockerfile", "diff", "jq", "make", "cmake", "promql", "solidity", "sql", "toml", "typescript", "terraform", "javascript" },
 	auto_install = true,
 	indent = {
 		enable = true
@@ -529,7 +531,6 @@ require'nvim-treesitter.configs'.setup {
 }
 
 -- mason.nvim
-
 require("mason").setup({
     ui = {
         icons = {
@@ -565,8 +566,18 @@ cmp.setup({
     end,
   },
   window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered(),
+    completion = {
+      -- style = "minimal",
+      border = "rounded",
+      win = "Normal:PmenuSel",
+      winhighlight = "Normal:Pmenu",
+    },
+    documentation = {
+      -- style = "minimal",
+      border = "rounded",
+      win = "Normal:PmenuSel",
+      winhighlight = "Normal:Pmenu",
+    },
   },
   mapping = cmp.mapping.preset.insert({
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
@@ -650,13 +661,14 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 -- require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
 --  capabilities = capabilities
 --}
-require('lspconfig').terraformls.setup{
-  on_attach = function(client)
-  require'completion'.on_attach(client)
-  map_keys()
-  print("lsp started")
+
+require'lspconfig'.terraformls.setup{}
+vim.api.nvim_create_autocmd({"BufWritePre"}, {
+  pattern = {"*.tf", "*.tfvars"},
+  callback = function()
+    vim.lsp.buf.format()
   end,
-}
+})
 
 -- YAML and k8s completion
 require('lspconfig').yamlls.setup {
@@ -753,11 +765,11 @@ require('guihua.maps').setup({
 -- Run gofmt + goimport on save
 local format_sync_grp = vim.api.nvim_create_augroup("GoImport", {})
 vim.api.nvim_create_autocmd("BufWritePre", {
-    pattern = "*.go",
-    callback = function()
-    require('go.format').goimport()
-    end,
-    group = format_sync_grp,
+  pattern = "*.go",
+  callback = function()
+   require('go.format').goimport()
+  end,
+  group = format_sync_grp,
 })
 
 require("dapui").setup()

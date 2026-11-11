@@ -11,7 +11,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'tpope/vim-sensible'
 Plug 'moll/vim-bbye'
 Plug 'nvim-lua/popup.nvim'
-Plug('nvim-telescope/telescope.nvim', {['tag'] = '0.1.4'})
+Plug('nvim-telescope/telescope.nvim', {['branch'] = 'master'})
 Plug 'tyru/open-browser-github.vim'
 Plug 'tyru/open-browser.vim'
 
@@ -33,7 +33,7 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'mhinz/vim-signify'
 
 -- motion
-Plug 'phaazon/hop.nvim'
+Plug 'smoka7/hop.nvim' -- phaazon/hop.nvim was deleted; maintained fork
 
 -- statusline
 Plug 'nvim-lualine/lualine.nvim'
@@ -41,6 +41,7 @@ Plug 'nvim-lualine/lualine.nvim'
 -- debug adapter protocol
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
+Plug 'nvim-neotest/nvim-nio' -- required by nvim-dap-ui
 Plug 'leoluz/nvim-dap-go'
 
 -- Treesitter
@@ -131,7 +132,6 @@ vim.o.fileencoding = 'utf-8'
 vim.o.splitbelow = true
 vim.o.splitright = true
 vim.o.eadirection = 'hor'
-vim.o.t_Co = 'xterm-256color'
 -- exclude usetab as we do not want to jump to buffers in already open tabs
 -- do not use split or vsplit to ensure we don't open any new windows
 vim.o.switchbuf = 'useopen,uselast'
@@ -514,21 +514,16 @@ vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
 -- tree-sitter
-require'nvim-treesitter.configs'.setup {
-	ensure_installed = { "go", "rust", "python", "perl", "bash", "vim", "lua", "c", "json", "yaml", "hcl", "gomod", "gosum", "gitignore", "gitcommit", "fish", "dockerfile", "diff", "jq", "make", "cmake", "promql", "solidity", "sql", "toml", "typescript", "terraform", "javascript" },
-	auto_install = true,
-	indent = {
-		enable = true
-	},
-	highlight = {
-		enable = true,
-		-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-		-- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-		-- Using this option may slow down your editor, and you may see some duplicate highlights.
-		-- Instead of true it can also be a list of languages
-		additional_vim_regex_highlighting = false,
-	},
-}
+-- nvim-treesitter `main` branch API (the old `configs` module was removed)
+local ts_parsers = { "go", "rust", "python", "perl", "bash", "vim", "lua", "c", "json", "yaml", "hcl", "gomod", "gosum", "gitignore", "gitcommit", "fish", "dockerfile", "diff", "jq", "make", "cmake", "promql", "solidity", "sql", "toml", "typescript", "terraform", "javascript" }
+require('nvim-treesitter').install(ts_parsers)
+vim.api.nvim_create_autocmd('FileType', {
+  callback = function(ev)
+    if pcall(vim.treesitter.start, ev.buf) then
+      vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end
+  end,
+})
 
 -- mason.nvim
 require("mason").setup({
@@ -543,7 +538,7 @@ require("mason").setup({
 
 -- mason-lspconfig
 require("mason-lspconfig").setup {
-	ensure_instsalled = { "gopls", "terraformls", "spectral", "rust_analyzer" }
+	ensure_installed = { "gopls", "terraformls", "spectral", "rust_analyzer" }
 }
 
 -- nvim-cmp
@@ -662,7 +657,8 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 --  capabilities = capabilities
 --}
 
-require'lspconfig'.terraformls.setup{}
+vim.lsp.config('*', { capabilities = capabilities })
+vim.lsp.enable('terraformls')
 vim.api.nvim_create_autocmd({"BufWritePre"}, {
   pattern = {"*.tf", "*.tfvars"},
   callback = function()
@@ -671,8 +667,7 @@ vim.api.nvim_create_autocmd({"BufWritePre"}, {
 })
 
 -- YAML and k8s completion
-require('lspconfig').yamlls.setup {
-    on_attach = on_attach,
+vim.lsp.config('yamlls', {
     settings = {
         yaml = {
             schemas = {
@@ -692,7 +687,8 @@ require('lspconfig').yamlls.setup {
             },
         }
     },
-}
+})
+vim.lsp.enable('yamlls')
 -- luasnip
 
 require("luasnip.loaders.from_vscode").load({ include = { "go" } }) -- Load only golang snippets
@@ -753,7 +749,8 @@ require('go').setup{
     },
 }
 local cfg = require'go.lsp'.config() -- config() return the go.nvim gopls setup
-require('lspconfig').gopls.setup(cfg)
+vim.lsp.config('gopls', cfg)
+vim.lsp.enable('gopls')
 
 -- guihua floating window
 require('guihua.maps').setup({
